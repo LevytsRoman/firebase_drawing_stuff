@@ -52,9 +52,9 @@ class App extends Component {
     // database.ref('/board').set(myarray)
   }
 
-  // componentWillUnmount(){
-  //   .ref.off();
-  // }
+  componentWillUnmount(){
+    database.ref('/cells').off();
+  }
 
   handleChange(e){
     // this.setState({
@@ -62,8 +62,8 @@ class App extends Component {
     // })
   }
 
-  colorShit = (i,j) => {
-    if(this.mouseClicked){
+  colorShit = (e, i,j) => {
+    if(this.mouseClicked || e.type === "touchmove"){
       // let board = this.state.board
       //
       // board[i][j] = this.state.color
@@ -75,7 +75,6 @@ class App extends Component {
       }
       database.ref(`/cells/${i}/${j}`).set(cell);
     }
-    console.log('fuck')
   }
   mouseDownHandler(){
     this.mouseClicked = true;
@@ -98,8 +97,9 @@ class App extends Component {
   // }
 
   resetColors = () => {
-    var myarray = [...Array(100).keys()].map(i => Array(100).fill('white'));
-    database.ref('/board').set(myarray)
+    // var myarray = [...Array(100).keys()].map(i => Array(100).fill(null));
+    // database.ref('/board').set(myarray)
+    database.ref('/cells').set(null)
   }
 
   render() {

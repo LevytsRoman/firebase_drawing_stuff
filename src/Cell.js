@@ -13,7 +13,7 @@ class Cell extends Component {
   }
 
   stuff(e){
-    this.props.colorShit(this.props.i, this.props.j);
+    this.props.colorShit(e, this.props.i, this.props.j);
   }
 
   render(){
@@ -21,8 +21,7 @@ class Cell extends Component {
       <div
         className='cell'
         style={{backgroundColor: this.props.cellValue}}
-        onTouchMove={this.stuff}
-        onMouseEnter={this.stuff}>
+        onTouchMove={this.stuff}>
       </div>
     );
   }
