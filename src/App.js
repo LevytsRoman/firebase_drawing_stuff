@@ -22,7 +22,7 @@ class App extends Component {
 
   componentDidMount() {
 
-    database.ref('/cells').on("value", snapshot => {
+    database.ref("/cells").on("value", snapshot => {
       let res = snapshot.val();
       if(res){
         // debugger
@@ -63,7 +63,7 @@ class App extends Component {
   }
 
   colorShit = (e, i,j) => {
-    if(this.mouseClicked || e.type === "touchmove"){
+    if(this.mouseClicked){
       // let board = this.state.board
       //
       // board[i][j] = this.state.color
@@ -97,7 +97,8 @@ class App extends Component {
   // }
 
   resetColors = () => {
-    // var myarray = [...Array(100).keys()].map(i => Array(100).fill(null));
+    var myarray = [...Array(100).keys()].map(i => Array(100).fill(null));
+    this.setState({board: myarray})
     // database.ref('/board').set(myarray)
     database.ref('/cells').set(null)
   }

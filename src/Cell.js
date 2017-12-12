@@ -21,7 +21,6 @@ class Cell extends Component {
       <div
         className='cell'
         style={{backgroundColor: this.props.cellValue}}
-        onTouchMove={this.stuff}
         onMouseEnter={this.stuff}>
       </div>
     );
