@@ -57,13 +57,9 @@ class App extends Component {
   }
   mouseDownHandler(){
     this.mouseClicked = true;
-    console.log('mousedown')
-    console.log(this.mouseClicked)
   }
 
   mouseUpHandler(){
-    console.log('mouseup')
-    console.log(this.mouseClicked)
     this.mouseClicked = false;
   }
   addMessage(){
