@@ -6,18 +6,23 @@ class Cell extends Component {
     super(props);
 
     this.stuff = this.stuff.bind(this);
+
   }
   shouldComponentUpdate(nextProps){
     return !(this.props.cellValue === nextProps.cellValue)
   }
 
-  stuff(){
-    this.props.colorShit(this.props.i, this.props.j);
+  stuff(e){
+    this.props.colorShit(e, this.props.i, this.props.j);
   }
 
   render(){
     return (
-      <div className='cell' style={{backgroundColor: this.props.cellValue}} onMouseEnter={this.stuff}></div>
+      <div
+        className='cell'
+        style={{backgroundColor: this.props.cellValue}}
+        onMouseEnter={this.stuff}>
+      </div>
     );
   }
 }

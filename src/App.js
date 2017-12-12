@@ -12,29 +12,49 @@ class App extends Component {
       // newMessage: ""
       // player:
       board: [],
-      color: ''
+      usedCells: [],
+      color: 'black'
     }
+    this.mouseDownHandler = this.mouseDownHandler.bind(this);
+    this.mouseUpHandler = this.mouseUpHandler.bind(this);
+    this.mouseClicked = false
   }
 
   componentDidMount() {
 
-    database.ref().on("value", snapshot => {
-      let board = snapshot.val().board;
-      // console.log('lol')
-      this.setState({board});
+    database.ref("/cells").on("value", snapshot => {
+      let res = snapshot.val();
+      if(res){
+        // debugger
+
+        let board = this.state.board;
+        let rows = Object.keys(res);
+        rows.map( rowNum => {
+          Object.keys(res[rowNum]).map( colNum => {
+            let cell = res[rowNum][colNum]
+            board[parseInt(cell.x)][parseInt(cell.y)] = cell.color
+          })
+        })
+        // console.log('lol')
+
+
+
+        // usedCells.map( cell => board[cell.x][cell.y] = cell.color)
+        this.setState({board});
+      }
     }, function (errorObject) {
       console.log("The read failed: " + errorObject.code);
     });
 
-    // var myarray = [...Array(100).keys()].map(i => Array(100).fill(0));
-    // this.setState({board: myarray});
+    var myarray = [...Array(100).keys()].map(i => Array(100).fill(null));
+    this.setState({board: myarray});
     // debugger
     // database.ref('/board').set(myarray)
   }
 
-  // componentWillUnmount(){
-  //   .ref.off();
-  // }
+  componentWillUnmount(){
+    database.ref('/cells').off();
+  }
 
   handleChange(e){
     // this.setState({
@@ -42,15 +62,27 @@ class App extends Component {
     // })
   }
 
-  colorShit = (i,j) => {
-    // let board = this.state.board
-    //
-    // board[i][j] = this.state.color
-    // this.setState({board});
-    // debugger
-    database.ref(`/board/${i}/${j}`).set(this.state.color);
+  colorShit = (e, i,j) => {
+    if(this.mouseClicked){
+      // let board = this.state.board
+      //
+      // board[i][j] = this.state.color
+      // this.setState({board});
+      let cell = {
+        x: i,
+        y: j,
+        color: this.state.color
+      }
+      database.ref(`/cells/${i}/${j}`).set(cell);
+    }
+  }
+  mouseDownHandler(){
+    this.mouseClicked = true;
   }
 
+  mouseUpHandler(){
+    this.mouseClicked = false;
+  }
   addMessage(){
     // e.preventDefault(); // <- prevent form submit from reloading the page
     /* Send the message to Firebase */
@@ -65,8 +97,10 @@ class App extends Component {
   // }
 
   resetColors = () => {
-    var myarray = [...Array(100).keys()].map(i => Array(100).fill('white'));
-    database.ref('/board').set(myarray)
+    var myarray = [...Array(100).keys()].map(i => Array(100).fill(null));
+    this.setState({board: myarray})
+    // database.ref('/board').set(myarray)
+    database.ref('/cells').set(null)
   }
 
   render() {
@@ -75,7 +109,8 @@ class App extends Component {
         <h1>Crap</h1>
         <button onClick={this.resetColors}>reset</button>
         <input type='color' onChange={(e) => this.setState({color: e.target.value})}/>
-        <div className="board">
+        <div className="board" onMouseDown={this.mouseDownHandler}
+        onMouseUp={this.mouseUpHandler}>
           {this.state.board.map( (row,i) => {
             return row.map( (cell,j) => <Cell colorShit={this.colorShit} cellValue={cell} i={i} j={j} key={i.toString() + j.toString()}/>)
           })}
