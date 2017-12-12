@@ -12,6 +12,7 @@ class App extends Component {
       // newMessage: ""
       // player:
       board: [],
+      usedCells: [],
       color: 'black'
     }
     this.mouseDownHandler = this.mouseDownHandler.bind(this);
@@ -21,16 +22,32 @@ class App extends Component {
 
   componentDidMount() {
 
-    database.ref().on("value", snapshot => {
-      let board = snapshot.val().board;
-      // console.log('lol')
-      this.setState({board});
+    database.ref('/cells').on("value", snapshot => {
+      let res = snapshot.val();
+      if(res){
+        // debugger
+
+        let board = this.state.board;
+        let rows = Object.keys(res);
+        rows.map( rowNum => {
+          Object.keys(res[rowNum]).map( colNum => {
+            let cell = res[rowNum][colNum]
+            board[parseInt(cell.x)][parseInt(cell.y)] = cell.color
+          })
+        })
+        // console.log('lol')
+
+
+
+        // usedCells.map( cell => board[cell.x][cell.y] = cell.color)
+        this.setState({board});
+      }
     }, function (errorObject) {
       console.log("The read failed: " + errorObject.code);
     });
 
-    // var myarray = [...Array(30).keys()].map(i => Array(30).fill(0));
-    // this.setState({board: myarray});
+    var myarray = [...Array(100).keys()].map(i => Array(100).fill(null));
+    this.setState({board: myarray});
     // debugger
     // database.ref('/board').set(myarray)
   }
@@ -46,14 +63,19 @@ class App extends Component {
   }
 
   colorShit = (i,j) => {
-    // debugger
     if(this.mouseClicked){
       // let board = this.state.board
       //
       // board[i][j] = this.state.color
       // this.setState({board});
-      database.ref(`/board/${i}/${j}`).set(this.state.color);
+      let cell = {
+        x: i,
+        y: j,
+        color: this.state.color
+      }
+      database.ref(`/cells/${i}/${j}`).set(cell);
     }
+    console.log('fuck')
   }
   mouseDownHandler(){
     this.mouseClicked = true;
