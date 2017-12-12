@@ -5,6 +5,7 @@ body {
 }
 
 .board {
+  user-select: none;
   font-size: 0px;
   width: 900px;
   height: 900px;
@@ -13,12 +14,13 @@ body {
 }
 
 .cell {
+  user-select: none;
   box-sizing: border-box;
   margin: 0px;
   padding: 0px;
   display: inline-block;
-  width: 9px;
-  height: 9px;
+  width: 30px;
+  height: 30px;
   /*border: 1px solid red;*/
   font-size: 5px;
 }
