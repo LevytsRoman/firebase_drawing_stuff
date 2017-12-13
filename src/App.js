@@ -14,6 +14,7 @@ class App extends Component {
       board: [],
       usedCells: [],
       color: '#000000',
+      randomColor: false,
       activeTool: 'pencil'
     }
     this.mouseDownHandler = this.mouseDownHandler.bind(this);
@@ -77,10 +78,13 @@ class App extends Component {
           y: j,
           color: this.state.color
         }
+        if(this.state.randomColor){
+          cell.color = '#'+ Math.floor(Math.random()*16777215).toString(16);
+        }
         database.ref(`/cells/${i}/${j}`).set(cell);
       }
     } else if( this.state.activeTool === 'eraser'){
-      if(this.state.board[i][j] && this.state.board[i][j] !== "#ffffff"){
+      if(this.state.board[i][j] && this.state.board[i][j] !== "#ffffff" && this.mouseClicked){
         database.ref(`/cells/${i}/${j}/color`).set("#ffffff");
       }
     } else if( this.state.activeTool === 'colorPicker'){
@@ -125,7 +129,7 @@ class App extends Component {
       <div className="App">
         <div className="tools">
           <h3>tools:</h3>
-          <input />
+          <button onClick={() => this.setState({randomColor: !this.state.randomColor})} class={this.state.modeActive}> random color mode </button>
           <button onClick={this.setTool} value='colorPicker'> color picker </button>
           <button onClick={this.setTool} value='eraser'> eraser </button>
           <button onClick={this.setTool} value='pencil'> pensil </button>
