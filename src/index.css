@@ -24,3 +24,19 @@ body {
   /*border: 1px solid red;*/
   font-size: 5px;
 }
+
+.cell:hover {
+  border: 1px purple solid;
+}
+
+.pencil {
+  cursor: url(pensil) -32 32, auto;
+}
+
+.eraser {
+  cursor: url(eraser.png) -32 32, auto;
+}
+
+.colorPicker {
+  cursor: url(colorPicker.png) -32 32, auto;
+}
