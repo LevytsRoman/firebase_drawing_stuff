@@ -13,7 +13,8 @@ class App extends Component {
       // player:
       board: [],
       usedCells: [],
-      color: 'black'
+      color: '#000000',
+      activeTool: 'pencil'
     }
     this.mouseDownHandler = this.mouseDownHandler.bind(this);
     this.mouseUpHandler = this.mouseUpHandler.bind(this);
@@ -32,6 +33,7 @@ class App extends Component {
         rows.map( rowNum => {
           Object.keys(res[rowNum]).map( colNum => {
             let cell = res[rowNum][colNum]
+            console.log(cell)
             board[parseInt(cell.x)][parseInt(cell.y)] = cell.color
           })
         })
@@ -63,17 +65,28 @@ class App extends Component {
   }
 
   colorShit = (e, i,j) => {
-    if(this.mouseClicked){
-      // let board = this.state.board
-      //
-      // board[i][j] = this.state.color
-      // this.setState({board});
-      let cell = {
-        x: i,
-        y: j,
-        color: this.state.color
+    console.log('colorShit fired');
+    if( this.state.activeTool === 'pencil'){
+      if(this.mouseClicked){
+        // let board = this.state.board
+        //
+        // board[i][j] = this.state.color
+        // this.setState({board});
+        let cell = {
+          x: i,
+          y: j,
+          color: this.state.color
+        }
+        database.ref(`/cells/${i}/${j}`).set(cell);
       }
-      database.ref(`/cells/${i}/${j}`).set(cell);
+    } else if( this.state.activeTool === 'eraser'){
+      if(this.state.board[i][j] && this.state.board[i][j] !== "#ffffff"){
+        database.ref(`/cells/${i}/${j}/color`).set("#ffffff");
+      }
+    } else if( this.state.activeTool === 'colorPicker'){
+      if(e.type === 'click') {
+        this.setState({color: this.state.board[i][j]});
+      }
     }
   }
   mouseDownHandler(){
@@ -103,14 +116,27 @@ class App extends Component {
     database.ref('/cells').set(null)
   }
 
+  setTool = e => {
+    this.setState({activeTool: e.target.value})
+  }
+
   render() {
     return (
       <div className="App">
-        <h1>Crap</h1>
-        <button onClick={this.resetColors}>reset</button>
-        <input type='color' onChange={(e) => this.setState({color: e.target.value})}/>
-        <div className="board" onMouseDown={this.mouseDownHandler}
-        onMouseUp={this.mouseUpHandler}>
+        <div className="tools">
+          <h3>tools:</h3>
+          <input />
+          <button onClick={this.setTool} value='colorPicker'> color picker </button>
+          <button onClick={this.setTool} value='eraser'> eraser </button>
+          <button onClick={this.setTool} value='pencil'> pensil </button>
+          <button onClick={this.resetColors}>reset</button>
+          <input type='color' value={this.state.color} onChange={(e) => this.setState({color: e.target.value})}/>
+        </div>
+        <div
+          className={"board " + this.state.activeTool }
+          onMouseDown={this.mouseDownHandler}
+          onMouseLeave={this.mouseUpHandler}
+          onMouseUp={this.mouseUpHandler}>
           {this.state.board.map( (row,i) => {
             return row.map( (cell,j) => <Cell colorShit={this.colorShit} cellValue={cell} i={i} j={j} key={i.toString() + j.toString()}/>)
           })}
