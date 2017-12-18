@@ -96,8 +96,37 @@ class App extends Component {
             y: j - k,
             color: this.state.color
           };
+          let xyPlusCell = {
+            x: i + k,
+            y: j + k,
+            color: this.state.color
+          };
+          let xyMinusCell = {
+            x: i - k,
+            y: j - k,
+            color: this.state.color
+          };
+          let yPlusxMinusCell = {
+            x: i + k,
+            y: j - k,
+            color: this.state.color
+          };
+          let yMinusxPlusCell = {
+            x: i - k,
+            y: j + k,
+            color: this.state.color
+          };
 
-          cells = cells.concat([xPlusCell, xMinusCell, yPlusCell, yMinusCell]);
+          cells = cells.concat([
+            xPlusCell,
+            xMinusCell,
+            yPlusCell,
+            yMinusCell,
+            xyMinusCell,
+            xyPlusCell,
+            yPlusxMinusCell,
+            yMinusxPlusCell
+          ]);
         }
         cells.map(cell => {
           if (this.state.randomColor) {
