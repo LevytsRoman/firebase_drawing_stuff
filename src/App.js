@@ -97,23 +97,23 @@ class App extends Component {
             color: this.state.color
           };
           let xyPlusCell = {
-            x: i + k,
-            y: j + k,
+            x: i + k - 1,
+            y: j + k - 1,
             color: this.state.color
           };
           let xyMinusCell = {
-            x: i - k,
-            y: j - k,
+            x: i - k + 1,
+            y: j - k + 1,
             color: this.state.color
           };
           let yPlusxMinusCell = {
-            x: i + k,
-            y: j - k,
+            x: i - k + 1,
+            y: j + k - 1,
             color: this.state.color
           };
           let yMinusxPlusCell = {
-            x: i - k,
-            y: j + k,
+            x: i + k - 1,
+            y: j - k + 1,
             color: this.state.color
           };
 
