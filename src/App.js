@@ -13,7 +13,7 @@ class App extends Component {
       color: "#000000",
       randomColor: false,
       activeTool: "pencil",
-      size: "1"
+      size: 0
     };
     this.mouseDownHandler = this.mouseDownHandler.bind(this);
     this.mouseUpHandler = this.mouseUpHandler.bind(this);
@@ -75,59 +75,63 @@ class App extends Component {
           color: this.state.color
         };
         let cells = [centerCell];
-        for (var k = 0; k <= this.state.size; k++) {
-          let xPlusCell = {
-            x: i + k,
-            y: j,
-            color: this.state.color
-          };
-          let xMinusCell = {
-            x: i - k,
-            y: j,
-            color: this.state.color
-          };
-          let yPlusCell = {
-            x: i,
-            y: j + k,
-            color: this.state.color
-          };
-          let yMinusCell = {
-            x: i,
-            y: j - k,
-            color: this.state.color
-          };
-          let xyPlusCell = {
-            x: i + k - 1,
-            y: j + k - 1,
-            color: this.state.color
-          };
-          let xyMinusCell = {
-            x: i - k + 1,
-            y: j - k + 1,
-            color: this.state.color
-          };
-          let yPlusxMinusCell = {
-            x: i - k + 1,
-            y: j + k - 1,
-            color: this.state.color
-          };
-          let yMinusxPlusCell = {
-            x: i + k - 1,
-            y: j - k + 1,
-            color: this.state.color
-          };
+        // console.log(typeof this.state.size);
+        if (this.state.size !== 0) {
+          for (var k = 0; k <= this.state.size; k++) {
+            let xPlusCell = {
+              x: i + k,
+              y: j,
+              color: this.state.color
+            };
+            let xMinusCell = {
+              x: i - k,
+              y: j,
+              color: this.state.color
+            };
+            let yPlusCell = {
+              x: i,
+              y: j + k,
+              color: this.state.color
+            };
+            let yMinusCell = {
+              x: i,
+              y: j - k,
+              color: this.state.color
+            };
+            let xyPlusCell = {
+              x: i + k - 1,
+              y: j + k - 1,
+              color: this.state.color
+            };
+            let xyMinusCell = {
+              x: i - k + 1,
+              y: j - k + 1,
+              color: this.state.color
+            };
+            let yPlusxMinusCell = {
+              x: i - k + 1,
+              y: j + k - 1,
+              color: this.state.color
+            };
+            let yMinusxPlusCell = {
+              x: i + k - 1,
+              y: j - k + 1,
+              color: this.state.color
+            };
 
-          cells = cells.concat([
-            xPlusCell,
-            xMinusCell,
-            yPlusCell,
-            yMinusCell,
-            xyMinusCell,
-            xyPlusCell,
-            yPlusxMinusCell,
-            yMinusxPlusCell
-          ]);
+            cells = cells.concat([
+              xPlusCell,
+              xMinusCell,
+              yPlusCell,
+              yMinusCell,
+              xyMinusCell,
+              xyPlusCell,
+              yPlusxMinusCell,
+              yMinusxPlusCell
+            ]);
+          }
         }
+        // console.log(cells);
         cells.map(cell => {
           if (this.state.randomColor) {
             cell.color =
