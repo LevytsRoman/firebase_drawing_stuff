@@ -40,3 +40,7 @@ body {
 .colorPicker {
   cursor: url(colorPicker.png) -32 32, auto;
 }
+
+.active {
+  background-color: blue;
+}
