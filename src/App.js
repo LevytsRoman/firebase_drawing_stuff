@@ -12,7 +12,8 @@ class App extends Component {
       usedCells: [],
       color: "#000000",
       randomColor: false,
-      activeTool: "pencil"
+      activeTool: "pencil",
+      size: "1"
     };
     this.mouseDownHandler = this.mouseDownHandler.bind(this);
     this.mouseUpHandler = this.mouseUpHandler.bind(this);
@@ -32,7 +33,7 @@ class App extends Component {
           rows.map(rowNum => {
             Object.keys(res[rowNum]).map(colNum => {
               let cell = res[rowNum][colNum];
-              console.log(cell);
+              // console.log(cell);
               board[parseInt(cell.x)][parseInt(cell.y)] = cell.color;
             });
           });
@@ -61,22 +62,49 @@ class App extends Component {
   }
 
   colorShit = (e, i, j) => {
-    console.log("colorShit fired");
+    // console.log("colorShit fired");
     if (this.state.activeTool === "pencil") {
       if (this.mouseClicked) {
         // let board = this.state.board
         //
         // board[i][j] = this.state.color
         // this.setState({board});
-        let cell = {
+        let centerCell = {
           x: i,
           y: j,
           color: this.state.color
         };
-        if (this.state.randomColor) {
-          cell.color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+        let cells = [centerCell];
+        for (var k = 0; k <= this.state.size; k++) {
+          let xPlusCell = {
+            x: i + k,
+            y: j,
+            color: this.state.color
+          };
+          let xMinusCell = {
+            x: i - k,
+            y: j,
+            color: this.state.color
+          };
+          let yPlusCell = {
+            x: i,
+            y: j + k,
+            color: this.state.color
+          };
+          let yMinusCell = {
+            x: i,
+            y: j - k,
+            color: this.state.color
+          };
+          cells = cells.concat([xPlusCell, xMinusCell, yPlusCell, yMinusCell]);
         }
-        database.ref(`/cells/${i}/${j}`).set(cell);
+        cells.map(cell => {
+          if (this.state.randomColor) {
+            cell.color =
+              "#" + Math.floor(Math.random() * 16777215).toString(16);
+          }
+          database.ref(`/cells/${cell.x}/${cell.y}`).set(cell);
+        });
       }
     } else if (this.state.activeTool === "eraser") {
       if (
@@ -126,11 +154,20 @@ class App extends Component {
   activeTool = toolName =>
     toolName === this.state.activeTool ? "active" : null;
 
+  rangeHandler = e => this.setState({ size: parseInt(e.target.value) });
+
   render() {
     return (
       <div className="App">
         <div className="tools">
           <h3>tools:</h3>
+          <input
+            type="range"
+            min="0"
+            max="2"
+            value={this.state.size}
+            onChange={this.rangeHandler}
+          />
           <button
             className={this.state.randomColor ? "active" : ""}
             onClick={() => {
