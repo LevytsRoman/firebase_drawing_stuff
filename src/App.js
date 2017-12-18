@@ -64,7 +64,7 @@ class App extends Component {
   colorShit = (e, i, j) => {
     // console.log("colorShit fired");
     if (this.state.activeTool === "pencil") {
-      if (this.mouseClicked) {
+      if (this.mouseClicked || e.type === "click") {
         // let board = this.state.board
         //
         // board[i][j] = this.state.color
@@ -96,6 +96,7 @@ class App extends Component {
             y: j - k,
             color: this.state.color
           };
+
           cells = cells.concat([xPlusCell, xMinusCell, yPlusCell, yMinusCell]);
         }
         cells.map(cell => {
@@ -110,7 +111,7 @@ class App extends Component {
       if (
         this.state.board[i][j] &&
         this.state.board[i][j] !== "#ffffff" &&
-        this.mouseClicked
+        (this.mouseClicked || e.type === "click")
       ) {
         database.ref(`/cells/${i}/${j}/color`).set("#ffffff");
       }
