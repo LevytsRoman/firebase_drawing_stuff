@@ -41,6 +41,10 @@ body {
   cursor: url(colorPicker.png) -32 32, auto;
 }
 
+.spray {
+  cursor: url(spray.png) -32 -32, auto;
+}
+
 .active {
   background-color: blue;
 }

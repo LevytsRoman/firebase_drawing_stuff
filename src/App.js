@@ -15,6 +15,7 @@ class App extends Component {
       activeTool: "pencil",
       size: 0
     };
+
     this.mouseDownHandler = this.mouseDownHandler.bind(this);
     this.mouseUpHandler = this.mouseUpHandler.bind(this);
     this.mouseClicked = false;
@@ -140,6 +141,41 @@ class App extends Component {
           database.ref(`/cells/${cell.x}/${cell.y}`).set(cell);
         });
       }
+    } else if (this.state.activeTool === "spray") {
+      if (this.mouseClicked || e.type === "click") {
+        let cells = [];
+        for (var d = 0; d < 10; d++) {
+          let plusX = Math.round(Math.random()) > 0.5;
+          let plusY = Math.round(Math.random()) > 0.5;
+          let newX, newY, cellColor;
+          if (plusX) {
+            newX = i + Math.round(Math.random() * 5);
+          } else {
+            newX = i - Math.round(Math.random() * 5);
+          }
+
+          if (plusY) {
+            newY = j + Math.round(Math.random() * 5);
+          } else {
+            newY = j - Math.round(Math.random() * 5);
+          }
+
+          if (this.state.randomColor) {
+            cellColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+          } else {
+            cellColor = this.state.color;
+          }
+          let newCell = {
+            x: newX,
+            y: newY,
+            color: cellColor
+          };
+          cells.push(newCell);
+        }
+        cells.map(cell => {
+          database.ref(`/cells/${cell.x}/${cell.y}`).set(cell);
+        });
+      }
     } else if (this.state.activeTool === "eraser") {
       if (
         this.state.board[i][j] &&
@@ -230,6 +266,13 @@ class App extends Component {
             value="pencil"
           >
             pencil
+          </button>
+          <button
+            className={this.activeTool("spray")}
+            onClick={this.setTool}
+            value="spray"
+          >
+            spray
           </button>
           <button onClick={this.resetColors}>reset</button>
           <input
