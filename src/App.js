@@ -62,6 +62,58 @@ class App extends Component {
     // })
   }
 
+  enforceLimit = num => {
+    if (num > 99) {
+      return 99;
+    }
+    if (num < 0) {
+      return 0;
+    }
+    return num;
+  };
+
+  shit = (i, j, k) => {
+    var cells = [];
+    // outer loop goes down rows
+    // var row = 0;
+    var p = 1;
+    for (var n = 0; n <= Math.floor(k / 2); n++) {
+      //has to start  at -1 of previous row
+      // for(var p = 0; p < k; p++){
+      while (p > 0) {
+        var newCell = {
+          x: this.enforceLimit(i - Math.floor(k / 2) + n),
+          y: this.enforceLimit(j - n + p - 1),
+          color: this.state.color
+        };
+        cells.push(newCell);
+        p--;
+      }
+      p = (n + 1) * 2 + 1;
+      // }
+      // row++;
+    }
+
+    var h = 1;
+    for (var n = 0; n < Math.floor(k / 2); n++) {
+      //has to start  at -1 of previous row
+      // for(var p = 0; p < k; p++){
+      while (h > 0) {
+        var newCell = {
+          x: this.enforceLimit(i + Math.floor(k / 2) - n),
+          y: this.enforceLimit(j + n - h + 1),
+          color: this.state.color
+        };
+        cells.push(newCell);
+        h--;
+      }
+      h = (n + 1) * 2 + 1;
+      // }
+      // row++;
+    }
+    return cells;
+  };
+
   colorShit = (e, i, j) => {
     // console.log("colorShit fired");
     if (this.state.activeTool === "pencil") {
@@ -70,68 +122,14 @@ class App extends Component {
         //
         // board[i][j] = this.state.color
         // this.setState({board});
-        let centerCell = {
-          x: i,
-          y: j,
-          color: this.state.color
-        };
-        let cells = [centerCell];
+        // let centerCell = {
+        //   x: i,
+        //   y: j,
+        //   color: this.state.color
+        // };
+        // let cells = [centerCell];
         // console.log(typeof this.state.size);
-        if (this.state.size !== 0) {
-          for (var k = 0; k <= this.state.size; k++) {
-            let xPlusCell = {
-              x: i + k,
-              y: j,
-              color: this.state.color
-            };
-            let xMinusCell = {
-              x: i - k,
-              y: j,
-              color: this.state.color
-            };
-            let yPlusCell = {
-              x: i,
-              y: j + k,
-              color: this.state.color
-            };
-            let yMinusCell = {
-              x: i,
-              y: j - k,
-              color: this.state.color
-            };
-            let xyPlusCell = {
-              x: i + k - 1,
-              y: j + k - 1,
-              color: this.state.color
-            };
-            let xyMinusCell = {
-              x: i - k + 1,
-              y: j - k + 1,
-              color: this.state.color
-            };
-            let yPlusxMinusCell = {
-              x: i - k + 1,
-              y: j + k - 1,
-              color: this.state.color
-            };
-            let yMinusxPlusCell = {
-              x: i + k - 1,
-              y: j - k + 1,
-              color: this.state.color
-            };
-
-            cells = cells.concat([
-              xPlusCell,
-              xMinusCell,
-              yPlusCell,
-              yMinusCell,
-              xyMinusCell,
-              xyPlusCell,
-              yPlusxMinusCell,
-              yMinusxPlusCell
-            ]);
-          }
-        }
+        let cells = this.shit(i, j, this.state.size);
         // console.log(cells);
         cells.map(cell => {
           if (this.state.randomColor) {
@@ -143,38 +141,8 @@ class App extends Component {
       }
     } else if (this.state.activeTool === "spray") {
       if (this.mouseClicked || e.type === "click") {
-        let cells = [];
-        for (var d = 0; d < 10; d++) {
-          let plusX = Math.round(Math.random()) > 0.5;
-          let plusY = Math.round(Math.random()) > 0.5;
-          let newX, newY, cellColor;
-          if (plusX) {
-            newX = i + Math.round(Math.random() * 5);
-          } else {
-            newX = i - Math.round(Math.random() * 5);
-          }
-
-          if (plusY) {
-            newY = j + Math.round(Math.random() * 5);
-          } else {
-            newY = j - Math.round(Math.random() * 5);
-          }
-
-          if (this.state.randomColor) {
-            cellColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
-          } else {
-            cellColor = this.state.color;
-          }
-          let newCell = {
-            x: newX,
-            y: newY,
-            color: cellColor
-          };
-          cells.push(newCell);
-        }
-        cells.map(cell => {
-          database.ref(`/cells/${cell.x}/${cell.y}`).set(cell);
-        });
+        // debugger;
+        this.sprayStuff(i, j);
       }
     } else if (this.state.activeTool === "eraser") {
       if (
@@ -190,6 +158,45 @@ class App extends Component {
       }
     }
   };
+
+  sprayStuff = (i, j) => {
+    // debugger;
+    if (this.mouseClicked) {
+      let cells = [];
+      for (var d = 0; d < 10; d++) {
+        let plusX = Math.round(Math.random()) > 0.5;
+        let plusY = Math.round(Math.random()) > 0.5;
+        let newX, newY, cellColor;
+        if (plusX) {
+          newX = i + Math.round(Math.random() * 5);
+        } else {
+          newX = i - Math.round(Math.random() * 5);
+        }
+
+        if (plusY) {
+          newY = j + Math.round(Math.random() * 5);
+        } else {
+          newY = j - Math.round(Math.random() * 5);
+        }
+
+        if (this.state.randomColor) {
+          cellColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+        } else {
+          cellColor = this.state.color;
+        }
+        let newCell = {
+          x: this.enforceLimit(newX),
+          y: this.enforceLimit(newY),
+          color: cellColor
+        };
+        cells.push(newCell);
+      }
+      cells.map(cell => {
+        database.ref(`/cells/${cell.x}/${cell.y}`).set(cell);
+      });
+    }
+  };
+
   mouseDownHandler() {
     this.mouseClicked = true;
   }
@@ -233,8 +240,9 @@ class App extends Component {
           <h3>tools:</h3>
           <input
             type="range"
-            min="0"
-            max="2"
+            min="1"
+            max="15"
+            step="2"
             value={this.state.size}
             onChange={this.rangeHandler}
           />
