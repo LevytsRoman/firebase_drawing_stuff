@@ -163,20 +163,20 @@ class App extends Component {
     // debugger;
     if (this.mouseClicked) {
       let cells = [];
-      for (var d = 0; d < 10; d++) {
+      for (var d = 0; d < 5 * (Math.floor(this.state.size) + 1); d++) {
         let plusX = Math.round(Math.random()) > 0.5;
         let plusY = Math.round(Math.random()) > 0.5;
         let newX, newY, cellColor;
         if (plusX) {
-          newX = i + Math.round(Math.random() * 5);
+          newX = i + Math.round(Math.random() * (5 + this.state.size));
         } else {
-          newX = i - Math.round(Math.random() * 5);
+          newX = i - Math.round(Math.random() * (5 + this.state.size));
         }
 
         if (plusY) {
-          newY = j + Math.round(Math.random() * 5);
+          newY = j + Math.round(Math.random() * (5 + this.state.size));
         } else {
-          newY = j - Math.round(Math.random() * 5);
+          newY = j - Math.round(Math.random() * (5 + this.state.size));
         }
 
         if (this.state.randomColor) {
