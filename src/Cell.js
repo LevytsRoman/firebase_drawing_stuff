@@ -1,29 +1,28 @@
-import React, { Component } from 'react';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
 
 class Cell extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.stuff = this.stuff.bind(this);
-
   }
-  shouldComponentUpdate(nextProps){
-    return !(this.props.cellValue === nextProps.cellValue)
+  shouldComponentUpdate(nextProps) {
+    return !(this.props.cellValue === nextProps.cellValue);
   }
 
-  stuff(e){
+  stuff(e) {
     this.props.colorShit(e, this.props.i, this.props.j);
   }
 
-  render(){
+  render() {
     return (
       <div
-        className='cell'
-        style={{backgroundColor: this.props.cellValue}}
+        className="cell"
+        style={{ backgroundColor: this.props.cellValue }}
         onMouseEnter={this.stuff}
-        onClick={this.stuff}>
-      </div>
+        onClick={this.stuff}
+      />
     );
   }
 }
