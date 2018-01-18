@@ -3,6 +3,69 @@ import "./App.css";
 import Cell from "./Cell";
 import { database } from "./firebase";
 
+function stuff(board, i, j, color, arr = []) {
+  if (board[i][j] === color && compareShit(arr, [i, j])) {
+    arr.push([i, j]);
+  } else {
+    return arr;
+  }
+
+  if (validPath(i + 1, j)) {
+    stuff(board, i + 1, j, color, arr);
+  }
+
+  if (validPath(i, j + 1)) {
+    stuff(board, i, j + 1, color, arr);
+  }
+
+  if (validPath(i - 1, j)) {
+    stuff(board, i - 1, j, color, arr);
+  }
+
+  if (validPath(i, j - 1)) {
+    stuff(board, i, j - 1, color, arr);
+  }
+  return arr;
+  // var checked = [],
+  //   succ = [];
+
+  // while (true) {
+  //   if (board[i][j] === color && compareShit(succ, [i, j])) {
+  //     succ.push([i, j]);
+  //   }
+  //   checked.push([i, j]);
+  //   if (validPath(i + 1, j) && compareShit(checked, [i + 1, j])) {
+  //     i++;
+  //     // stuff(board, i + 1, j, color, arr);
+  //   } else if (validPath(i, j + 1) && compareShit(checked, [i, j + 1])) {
+  //     // stuff(board, i, j + 1, color, arr);
+  //     j++;
+  //   } else if (validPath(i - 1, j) && compareShit(checked, [i - 1, j])) {
+  //     // stuff(board, i - 1, j, color, arr);
+  //     i--;
+  //   } else if (validPath(i, j - 1) && compareShit(checked, [i, j - 1])) {
+  //     j--;
+  //     // stuff(board, i, j - 1, color, arr);
+  //   } else {
+  //     break;
+  //   }
+  // }
+  // return succ;
+}
+
+function compareShit(arr, coord) {
+  for (var i = 0, l = arr.length; i < l; i++) {
+    if (arr[i][0] === coord[0] && arr[i][1] === coord[1]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function validPath(i, j) {
+  return i >= 0 && i < 50 && (j >= 0 && j < 50);
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -22,15 +85,14 @@ class App extends Component {
   }
 
   componentDidMount() {
-    database.ref("/cells").on(
-      "value",
-      snapshot => {
+    database.ref("/cells").on("value", snapshot => {
         let res = snapshot.val();
         if (res) {
           // debugger
 
           let board = this.state.board;
           let rows = Object.keys(res);
+
           rows.map(rowNum => {
             Object.keys(res[rowNum]).map(colNum => {
               let cell = res[rowNum][colNum];
@@ -46,7 +108,7 @@ class App extends Component {
       }
     );
 
-    var myarray = [...Array(100).keys()].map(i => Array(100).fill(null));
+    var myarray = [...Array(50).keys()].map(i => Array(50).fill(null));
     this.setState({ board: myarray });
     // debugger
     // database.ref('/board').set(myarray)
@@ -62,15 +124,15 @@ class App extends Component {
     // })
   }
 
-  enforceLimit = num => {
-    if (num > 99) {
-      return 99;
+  enforceLimit(num) {
+    if (num > 49) {
+      return 49;
     }
     if (num < 0) {
       return 0;
     }
     return num;
-  };
+  }
 
   shit = (i, j, k) => {
     var cells = [];
@@ -117,6 +179,7 @@ class App extends Component {
   colorShit = (e, i, j) => {
     // console.log("colorShit fired");
     if (this.state.activeTool === "pencil") {
+      console.log("I run");
       if (this.mouseClicked || e.type === "click") {
         // let board = this.state.board
         //
@@ -156,6 +219,20 @@ class App extends Component {
       if (e.type === "click") {
         this.setState({ color: this.state.board[i][j] });
       }
+    } else if (this.state.activeTool === "fill" && e.type === "click") {
+      let filledCells = stuff(this.state.board, i, j, this.state.board[i][j]);
+      let newBoard = this.state.board;
+
+      filledCells.map(coords => {
+        // if (this.state.randomColor) {
+        //   cell.color =
+        //     "#" + Math.floor(Math.random() * 16777215).toString(16);
+        // }
+        let cell = { x: coords[0], y: coords[1], color: this.state.color };
+        database.ref(`/cells/${cell.x}/${cell.y}`).set(cell);
+        newBoard[cell.x][cell.y] = cell.color;
+      });
+      this.setState({ board: newBoard });
     }
   };
 
@@ -238,6 +315,12 @@ class App extends Component {
       <div className="App">
         <div className="tools">
           <h3>tools:</h3>
+          <input
+            type="submit"
+            value="fill"
+            className={this.activeTool("fill")}
+            onClick={this.setTool}
+          />
           <input
             type="range"
             min="1"

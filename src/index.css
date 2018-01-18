@@ -7,8 +7,8 @@ body {
 .board {
   user-select: none;
   font-size: 0px;
-  width: 900px;
-  height: 900px;
+  width: 500px;
+  height: auto;
   /*display: flex;*/
   border: solid green 1px;
 }
@@ -19,8 +19,8 @@ body {
   margin: 0px;
   padding: 0px;
   display: inline-block;
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
   /*border: 1px solid red;*/
   font-size: 5px;
 }
