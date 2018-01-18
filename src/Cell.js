@@ -7,6 +7,7 @@ class Cell extends Component {
 
     this.stuff = this.stuff.bind(this);
   }
+  
   shouldComponentUpdate(nextProps) {
     return !(this.props.cellValue === nextProps.cellValue);
   }
