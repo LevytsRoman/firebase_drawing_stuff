@@ -18,7 +18,6 @@ const config = {
 };
 
 const fire = firebase.initializeApp(config);
+const database = fire.database();
 
-export default fire;
-
-export const database = fire.database();
+export { fire, database }

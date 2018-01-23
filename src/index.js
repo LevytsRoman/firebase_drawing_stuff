@@ -1,8 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Route, BrowserRouter } from "react-router-dom";
 import './index.css';
 import App from './App';
-// import registerServiceWorker from './registerServiceWorker';
+import Login from './components/users/login';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// import registerServiceWorker from './registerServiceWorker';
+const Main = () => {
+	return (
+		<BrowserRouter>
+			<div className="app">
+				<Route exact path="/" component={App} />
+				<Route exact path="/login" component={Login} />
+			</div>
+		</BrowserRouter>
+	)
+}
+ReactDOM.render(<Main />, document.getElementById('root'));
 // registerServiceWorker();
