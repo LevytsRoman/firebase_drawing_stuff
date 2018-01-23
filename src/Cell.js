@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "./App.css";
 
 class Cell extends Component {
   constructor(props) {
@@ -7,7 +6,7 @@ class Cell extends Component {
 
     this.stuff = this.stuff.bind(this);
   }
-  
+
   shouldComponentUpdate(nextProps) {
     return !(this.props.cellValue === nextProps.cellValue);
   }

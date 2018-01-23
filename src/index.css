@@ -30,19 +30,19 @@ body {
 }
 
 .pencil {
-  cursor: url(pensil) -32 32, auto;
+  cursor: url('./icons/pensil') -32 32, auto;
 }
 
 .eraser {
-  cursor: url(eraser.png) -32 32, auto;
+  cursor: url('./icons/eraser.png') -32 32, auto;
 }
 
 .colorPicker {
-  cursor: url(colorPicker.png) -32 32, auto;
+  cursor: url('./icons/colorPicker.png') -32 32, auto;
 }
 
 .spray {
-  cursor: url(spray.png) -32 -32, auto;
+  cursor: url('./icons/spray.png') -32 -32, auto;
 }
 
 .active {
