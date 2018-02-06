@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import Cell from "./Cell";
-import { database } from "./firebase";
+import Cell from "../components/Cell";
+import { database } from "../utilities/firebase";
 
 function stuff(board, i, j, color, arr = []) {
   if (board[i][j] === color && compareShit(arr, [i, j])) {
