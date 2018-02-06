@@ -1,8 +1,13 @@
 import React, { Component } from "react";
-import { fire } from "../../firebase";
+import { fire } from "../utilities/firebase";
 import { Redirect } from "react-router-dom";
 import { Button, Position, Toaster, Intent } from "@blueprintjs/core";
 // Toaster for warning message
+import { connect } from "react-redux";
+// import {dispatch} from "redux";
+
+import { setCurrentUser } from '../actionCreators';
+
 const loginStyle = {
   width: "90%",
   maxWidth: "315px",
@@ -58,7 +63,13 @@ class Login extends Component {
       .then((user) => {
         if (user && user.email) {
           this.loginForm.reset()
-          this.props.setCurrentUser(user)
+          let currentUser = {
+            username: user.email,
+            uid: user.uid
+          }
+          debugger
+          this.props.setUser(currentUser)
+          debugger
           this.setState({ redirect: true })
         }
       })
@@ -136,4 +147,11 @@ class Login extends Component {
     );
   }
 }
-export default Login;
+
+const mapDispatchToProps = dispatch => ({
+  setUser(user) {
+    dispatch(setCurrentUser(user));
+  }
+});
+
+export default connect(null, mapDispatchToProps)(Login);;
